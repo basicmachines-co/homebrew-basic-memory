@@ -1,5 +1,4 @@
 class BasicMemory < Formula
-  include Language::Python::Virtualenv
   desc "AI-powered knowledge management system with MCP server integration"
   homepage "https://github.com/basicmachines-co/basic-memory"
   url "https://github.com/basicmachines-co/basic-memory/archive/refs/tags/v0.13.5.tar.gz"
@@ -7,15 +6,17 @@ class BasicMemory < Formula
   license "AGPL-3.0-or-later"
   head "https://github.com/basicmachines-co/basic-memory.git", branch: "main"
 
-  depends_on "python@3.12"
+  depends_on "uv" => :build
 
   def install
-    python3 = "python3.12"
-    venv = virtualenv_create(libexec, python3)
+    # Use uv to create a virtual environment with its own Python
+    ENV["UV_PYTHON_PREFERENCE"] = "only-managed"
+    system "uv", "venv", libexec, "--python", "3.12"
     
-    system libexec/"bin/pip", "install", "--upgrade", "pip"
-    system libexec/"bin/pip", "install", "."
+    # Install basic-memory into the virtual environment
+    system "uv", "pip", "install", "--python", libexec/"bin/python", "."
     
+    # Create symlinks for executables
     bin.install_symlink Dir[libexec/"bin/*"]
   end
 
