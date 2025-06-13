@@ -11,13 +11,16 @@ class BasicMemory < Formula
   def install
     # Use uv to create a virtual environment with its own Python
     ENV["UV_PYTHON_PREFERENCE"] = "only-managed"
-    system "uv", "venv", libexec, "--python", "3.12"
+    ENV["UV_PYTHON_INSTALL_DIR"] = libexec/"uv_python"
+    
+    system "uv", "venv", libexec, "--python", "3.12", "--relocatable"
     
     # Install basic-memory into the virtual environment
     system "uv", "pip", "install", "--python", libexec/"bin/python", "."
     
-    # Create symlinks for executables
-    bin.install_symlink Dir[libexec/"bin/*"]
+    # Create symlinks only for the main executables, not python itself
+    bin.install_symlink libexec/"bin/basic-memory"
+    bin.install_symlink libexec/"bin/bm"
   end
 
   service do
