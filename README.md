@@ -29,13 +29,6 @@ brew install basicmachines-co/basic-memory/basic-memory
 
 After installation:
 
-```bash
-# Start Basic Memory server
-brew services start basic-memory
-
-# Or run manually
-basic-memory serve
-
 # Check version
 basic-memory --version
 ```
