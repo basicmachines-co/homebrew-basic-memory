@@ -13,7 +13,7 @@ class BasicMemory < Formula
     ENV["UV_PYTHON_PREFERENCE"] = "only-managed"
     ENV["UV_PYTHON_INSTALL_DIR"] = libexec/"uv_python"
     
-    system "uv", "venv", libexec, "--python", "3.12", "--relocatable"
+    system "uv", "venv", libexec, "--python", "3.12"
     
     # Install basic-memory into the virtual environment
     system "uv", "pip", "install", "--python", libexec/"bin/python", "."
