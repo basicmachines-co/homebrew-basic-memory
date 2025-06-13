@@ -11,14 +11,14 @@ class BasicMemory < Formula
 
   def install
     # Install Node.js dependencies
-    system "npm", "install", *Language::Node.std_npm_install_args(libexec)
-    
+    system "npm", "install", *Language::Node.std_npm_args(libexec)
+
     # Install Python dependencies
     virtualenv_install_with_resources
-    
+
     # Create bin symlinks
     bin.install_symlink Dir["#{libexec}/bin/*"]
-    
+
     # Install any additional files
     # Adjust paths based on actual project structure
     share.install "config" if File.exist?("config")
@@ -34,6 +34,6 @@ class BasicMemory < Formula
 
   test do
     # Basic test to ensure the binary works
-    system "#{bin}/basic-memory", "--version"
+    system bin/"basic-memory", "--version"
   end
 end
