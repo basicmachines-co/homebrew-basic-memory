@@ -9,10 +9,13 @@ class BasicMemory < Formula
   depends_on "python@3.12"
 
   def install
-    virtualenv_install_with_resources do
-      system "python", "-m", "pip", "install", "--upgrade", "pip"
-      system "python", "-m", "pip", "install", "."
-    end
+    python3 = "python3.12"
+    venv = virtualenv_create(libexec, python3)
+    
+    system libexec/"bin/pip", "install", "--upgrade", "pip"
+    system libexec/"bin/pip", "install", "."
+    
+    bin.install_symlink Dir[libexec/"bin/*"]
   end
 
   service do
