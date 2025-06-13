@@ -23,7 +23,6 @@ brew install basicmachines-co/basic-memory/basic-memory
 - `basic-memory` command-line tool
 - MCP server integration
 - Configuration templates
-- Service management (launchd integration)
 
 ## Usage
 
