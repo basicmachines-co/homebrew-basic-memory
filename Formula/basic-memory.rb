@@ -16,7 +16,7 @@ class BasicMemory < Formula
     ENV["UV_TOOL_BIN_DIR"] = libexec/"bin"
     
     # Install basic-memory as a uv tool
-    system "uv", "tool", "install", ".", "--from", buildpath.to_s
+    system "uv", "tool", "install", "--from", buildpath.to_s, "basic-memory"
     
     # Create symlinks to the executables
     bin.install_symlink Dir[libexec/"bin/*"]
