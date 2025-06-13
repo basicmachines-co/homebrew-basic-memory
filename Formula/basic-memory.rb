@@ -3,26 +3,16 @@ class BasicMemory < Formula
   homepage "https://github.com/basicmachines-co/basic-memory"
   url "https://github.com/basicmachines-co/basic-memory/archive/refs/tags/v0.13.5.tar.gz"
   sha256 "61caf0d4b3991d46aa67d36b1224fbaacbe411076f27a2a19535740627fbd19c"
-  license "MIT"
+  license "AGPL-3.0-or-later"
   head "https://github.com/basicmachines-co/basic-memory.git", branch: "main"
 
-  depends_on "node"
-  depends_on "python@3.11"
+  depends_on "python@3.12"
 
   def install
-    # Install Node.js dependencies
-    system "npm", "install", *Language::Node.std_npm_args(libexec)
-
-    # Install Python dependencies
-    virtualenv_install_with_resources
-
-    # Create bin symlinks
-    bin.install_symlink Dir["#{libexec}/bin/*"]
-
-    # Install any additional files
-    # Adjust paths based on actual project structure
-    share.install "config" if File.exist?("config")
-    share.install "templates" if File.exist?("templates")
+    virtualenv_install_with_resources do
+      system "python", "-m", "pip", "install", "--upgrade", "pip"
+      system "python", "-m", "pip", "install", "."
+    end
   end
 
   service do
