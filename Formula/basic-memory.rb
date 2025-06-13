@@ -1,4 +1,5 @@
 class BasicMemory < Formula
+  include Language::Python::Virtualenv
   desc "AI-powered knowledge management system with MCP server integration"
   homepage "https://github.com/basicmachines-co/basic-memory"
   url "https://github.com/basicmachines-co/basic-memory/archive/refs/tags/v0.13.5.tar.gz"
