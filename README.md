@@ -63,6 +63,6 @@ If you encounter issues:
 
 ## Contributing
 
-This tap is maintained at: https://github.com/basicmachines-co/basic-memory-tap
+This tap is maintained at: https://github.com/basicmachines-co/homebrew-basic-memory
 
 Report issues or submit pull requests there.
