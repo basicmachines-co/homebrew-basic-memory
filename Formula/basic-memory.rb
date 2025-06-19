@@ -15,8 +15,8 @@ class BasicMemory < Formula
     ENV["UV_TOOL_DIR"] = libexec/"tools"
     ENV["UV_TOOL_BIN_DIR"] = libexec/"bin"
     
-    # Install basic-memory as a uv tool
-    system "uv", "tool", "install", "--from", buildpath.to_s, "basic-memory"
+    # Install basic-memory as a uv tool from PyPI with exact version
+    system "uv", "tool", "install", "basic-memory==#{version}"
     
     # Create symlinks to the executables
     bin.install_symlink Dir[libexec/"bin/*"]
