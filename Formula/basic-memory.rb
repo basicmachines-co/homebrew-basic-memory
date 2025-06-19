@@ -25,11 +25,16 @@ class BasicMemory < Formula
     bin.install_symlink Dir[libexec/"bin/*"]
   end
 
-  service do
-    run [opt_bin/"basic-memory", "serve"]
-    keep_alive true
-    log_path var/"log/basic-memory.log"
-    error_log_path var/"log/basic-memory.log"
+  def caveats
+    <<~EOS
+      Basic Memory has been installed as a command-line tool.
+      
+      To get started:
+        basic-memory --help
+      
+      For use with Claude Desktop, add to your claude_desktop_config.json:
+        https://memory.basicmachines.co/integrations/claude-desktop
+    EOS
   end
 
   test do
