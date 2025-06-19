@@ -15,8 +15,11 @@ class BasicMemory < Formula
     ENV["UV_TOOL_DIR"] = libexec/"tools"
     ENV["UV_TOOL_BIN_DIR"] = libexec/"bin"
     
+    # Disable git-based versioning to prevent dev versions
+    ENV["SETUPTOOLS_SCM_PRETEND_VERSION"] = version.to_s
+    
     # Install basic-memory as a uv tool from PyPI with exact version
-    system "uv", "tool", "install", "basic-memory==#{version}"
+    system "uv", "tool", "install", "basic-memory==#{version}", "--no-cache"
     
     # Create symlinks to the executables
     bin.install_symlink Dir[libexec/"bin/*"]
