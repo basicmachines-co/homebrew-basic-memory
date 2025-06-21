@@ -4,6 +4,8 @@ A Homebrew tap for installing Basic Memory - an AI-powered knowledge management 
 
 ## Installation
 
+### Stable Version
+
 ```bash
 # Add this tap
 brew tap basicmachines-co/basic-memory
@@ -18,6 +20,23 @@ Or install directly:
 brew install basicmachines-co/basic-memory/basic-memory
 ```
 
+### Beta/Pre-release Version
+
+Install a specific beta, release candidate, or development version:
+
+```bash
+# Install a specific beta version
+BM_VERSION=0.13.8b1 brew install basicmachines-co/basic-memory/basic-memory-beta
+
+# Install a release candidate
+BM_VERSION=0.13.8rc1 brew install basicmachines-co/basic-memory/basic-memory-beta
+
+# Install a development version
+BM_VERSION=0.13.8.dev1 brew install basicmachines-co/basic-memory/basic-memory-beta
+```
+
+Available versions can be found at: https://pypi.org/project/basic-memory/#history
+
 ## What gets installed
 
 - `basic-memory` command-line tool
@@ -28,8 +47,26 @@ brew install basicmachines-co/basic-memory/basic-memory
 
 After installation:
 
+```bash
 # Check version
 basic-memory --version
+
+# Use the shorthand
+bm --help
+```
+
+## Switching Between Versions
+
+You can have either the stable or beta version installed at a time:
+
+```bash
+# Switch from stable to beta
+brew uninstall basic-memory
+BM_VERSION=x.y.z brew install basic-memory-beta
+
+# Switch from beta to stable
+brew uninstall basic-memory-beta
+brew install basic-memory
 ```
 
 ## Configuration
@@ -49,9 +86,9 @@ brew install --HEAD basic-memory
 
 If you encounter issues:
 
-1. Check the service status: `brew services list | grep basic-memory`
-2. View logs: `tail -f $(brew --prefix)/var/log/basic-memory.log`
-3. Reinstall: `brew uninstall basic-memory && brew install basic-memory`
+1. Reinstall: `brew uninstall basic-memory && brew install basic-memory`
+2. For beta versions: `brew uninstall basic-memory-beta && BM_VERSION=x.y.z brew install basic-memory-beta`
+3. Clear Homebrew cache: `brew cleanup basic-memory` or `brew cleanup basic-memory-beta`
 
 ## Contributing
 
