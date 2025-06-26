@@ -1,8 +1,8 @@
 class BasicMemory < Formula
   desc "AI-powered knowledge management system with MCP server integration"
   homepage "https://github.com/basicmachines-co/basic-memory"
-  url "https://github.com/basicmachines-co/basic-memory/archive/refs/tags/v0.13.7.tar.gz"
-  sha256 "309d5d1f1090d6b196b5e2fd05ef4b0b15a7baf509004a60f0c7cddbe7f781a1"
+  url "https://github.com/basicmachines-co/basic-memory/archive/refs/tags/v0.14.0.tar.gz"
+  sha256 "7bf93131aa267c9d5f210afc3228e01fb135ced6c953e4e64ce49e058367b8b0"
   license "AGPL-3.0-or-later"
   head "https://github.com/basicmachines-co/basic-memory.git", branch: "main"
 
