@@ -15,8 +15,10 @@ class BasicMemory < Formula
     ENV["UV_TOOL_DIR"] = libexec/"tools"
     ENV["UV_TOOL_BIN_DIR"] = libexec/"bin"
     
-    # Disable git-based versioning to prevent dev versions
-    ENV["SETUPTOOLS_SCM_PRETEND_VERSION"] = version.to_s
+    # Note: We don't set SETUPTOOLS_SCM_PRETEND_VERSION here because
+    # we're installing from PyPI (pre-built), not building from source.
+    # Setting it would leak into dependency builds (e.g., lazy-object-proxy)
+    # causing version metadata mismatches.
     
     # Install basic-memory as a uv tool from PyPI with exact version
     system "uv", "tool", "install", "basic-memory==#{version}", "--no-cache"
