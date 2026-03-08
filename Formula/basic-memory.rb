@@ -6,6 +6,7 @@ class BasicMemory < Formula
   license "AGPL-3.0-or-later"
   head "https://github.com/basicmachines-co/basic-memory.git", branch: "main"
 
+  depends_on "rust" => :build
   depends_on "uv" => :build
 
   def install
