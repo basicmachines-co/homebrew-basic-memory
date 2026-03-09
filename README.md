@@ -84,7 +84,18 @@ brew install --HEAD basic-memory
 
 ## Troubleshooting
 
-If you encounter issues:
+### "Failed to fix install linkage" warning
+
+During installation you may see an error like:
+
+```
+Error: Failed changing dylib ID of .../libexec/.../some_file.so
+Error: Failed to fix install linkage
+```
+
+**This is harmless.** Homebrew tries to rewrite internal paths in all shared libraries, but some Python extension modules (built by Rust via maturin/PyO3) don't have enough header space for the longer paths. The installation completes successfully despite the warning, and basic-memory works normally.
+
+### General troubleshooting
 
 1. Reinstall: `brew uninstall basic-memory && brew install basic-memory`
 2. For beta versions: `brew uninstall basic-memory-beta && BM_VERSION=x.y.z brew install basic-memory-beta`
