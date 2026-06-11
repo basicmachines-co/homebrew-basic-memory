@@ -37,6 +37,10 @@ class BasicMemory < Formula
       
       For use with Claude Desktop, add to your claude_desktop_config.json:
         https://memory.basicmachines.co/integrations/claude-desktop
+
+      Homebrew 6 will require explicit trust for third-party taps before
+      installing or upgrading from them. To keep upgrades working:
+        brew trust basicmachines-co/basic-memory
     EOS
   end
 
