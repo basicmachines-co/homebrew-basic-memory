@@ -2,17 +2,24 @@ class BasicMemoryBeta < Formula
   desc "AI-powered knowledge management system with MCP server integration (beta/pre-release)"
   homepage "https://github.com/basicmachines-co/basic-memory"
   # This is a placeholder URL - the actual version will be specified at install time
+  # via BM_VERSION. Homebrew cannot infer a version from a bare git URL, so an
+  # explicit placeholder is required: Formula.all validates every formula in the
+  # tap at load time, and a nil version makes `brew tap` fail for the whole tap,
+  # including for users who only want the stable basic-memory formula.
   url "https://github.com/basicmachines-co/basic-memory.git", branch: "main"
+  version "0.0.0"
   license "AGPL-3.0-or-later"
   
   depends_on "rust" => :build
   depends_on "uv" => :build
 
   def install
-    # Get the version from BM_VERSION environment variable
-    version = ENV["BM_VERSION"]
+    # Get the version from BM_VERSION environment variable. Note this is
+    # deliberately not named `version`: that would shadow Formula#version, which
+    # is what made the missing version stanza above easy to miss.
+    bm_version = ENV["BM_VERSION"]
     
-    unless version
+    unless bm_version
       odie <<~EOS
         You must specify a version to install!
         
@@ -33,11 +40,11 @@ class BasicMemoryBeta < Formula
     ENV["UV_TOOL_BIN_DIR"] = libexec/"bin"
     
     # Set the version to prevent dev version issues
-    ENV["SETUPTOOLS_SCM_PRETEND_VERSION"] = version
+    ENV["SETUPTOOLS_SCM_PRETEND_VERSION"] = bm_version
     
     # Install basic-memory as a uv tool from PyPI with exact version
     # For pre-releases, we need to add --pre flag
-    system "uv", "tool", "install", "basic-memory==#{version}", "--pre", "--no-cache"
+    system "uv", "tool", "install", "basic-memory==#{bm_version}", "--pre", "--no-cache"
     
     # Create symlinks to the executables
     bin.install_symlink Dir[libexec/"bin/*"]
