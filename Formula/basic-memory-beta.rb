@@ -51,6 +51,11 @@ class BasicMemoryBeta < Formula
     # loads one, so `bm`/`basic-memory` exits 137 with no output. This formula
     # installs the same wheels through the same `uv tool install`, so it is
     # affected identically. See Formula/basic-memory.rb for the full write-up.
+    # macOS-only: `codesign` does not exist on other platforms, and
+    # `Hardware::CPU.arm?` is true on ARM Linux too -- where the glob would
+    # find Linux `.so` files, `codesign` would be missing, and the `system`
+    # call below would abort `post_install` and fail the whole install.
+    return unless OS.mac?
     return unless Hardware::CPU.arm?
 
     Dir.glob(libexec/"**/*.{so,dylib}", File::FNM_DOTMATCH).each do |file|
