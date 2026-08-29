@@ -45,7 +45,12 @@ class BasicMemory < Formula
     # Re-sign the bundled Mach-O files here, after relocation has run.
     return unless Hardware::CPU.arm?
 
-    Dir.glob(libexec/"**/*.{so,dylib}").each do |file|
+    # `File::FNM_DOTMATCH` is required. Ruby's `**` does not descend into
+    # dot-directories, and delocate vendors every dylib a macOS wheel bundles
+    # into a `.dylibs/` directory -- e.g. `PIL/.dylibs/libtiff.6.dylib`, one of
+    # the files reported crashing in #2. Without the flag, 18 of the 103 Mach-O
+    # files in a 0.23.2 install are skipped and `bm doctor` still dies.
+    Dir.glob(libexec/"**/*.{so,dylib}", File::FNM_DOTMATCH).each do |file|
       next if quiet_system("codesign", "--verify", file)
 
       system "codesign", "--force", "--sign", "-", file
