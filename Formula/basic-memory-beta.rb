@@ -43,6 +43,28 @@ class BasicMemoryBeta < Formula
     bin.install_symlink Dir[libexec/"bin/*"]
   end
 
+  def post_install
+    # Same as the stable formula: Homebrew's `fix_dynamic_linkage` rewrites
+    # LC_ID_DYLIB in the bundled Mach-O files after `install` and writes them
+    # back without re-signing, which invalidates the ad-hoc signature the wheels
+    # ship with. On Apple Silicon the kernel then SIGKILLs any process that
+    # loads one, so `bm`/`basic-memory` exits 137 with no output. This formula
+    # installs the same wheels through the same `uv tool install`, so it is
+    # affected identically. See Formula/basic-memory.rb for the full write-up.
+    # macOS-only: `codesign` does not exist on other platforms, and
+    # `Hardware::CPU.arm?` is true on ARM Linux too -- where the glob would
+    # find Linux `.so` files, `codesign` would be missing, and the `system`
+    # call below would abort `post_install` and fail the whole install.
+    return unless OS.mac?
+    return unless Hardware::CPU.arm?
+
+    Dir.glob(libexec/"**/*.{so,dylib}", File::FNM_DOTMATCH).each do |file|
+      next if quiet_system("codesign", "--verify", file)
+
+      system "codesign", "--force", "--sign", "-", file
+    end
+  end
+
   def caveats
     <<~EOS
       Basic Memory BETA has been installed as a command-line tool.

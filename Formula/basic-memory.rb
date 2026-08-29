@@ -28,6 +28,40 @@ class BasicMemory < Formula
     bin.install_symlink Dir[libexec/"bin/*"]
   end
 
+  def post_install
+    # Homebrew runs `fix_dynamic_linkage` after `install` but before
+    # `post_install`. For every bundled Python extension module it rewrites
+    # LC_ID_DYLIB through ruby-macho (e.g. protobuf's `_message.abi3.so`, whose
+    # upstream ID is still a `bazel-out/...` build path) and then writes the
+    # file back without re-signing it -- `codesign_patched_binaries` is only
+    # wired into the text-relocation path, not this one.
+    #
+    # That leaves the ad-hoc signature the wheels ship with no longer matching
+    # the file contents. On Apple Silicon the kernel refuses to load such a
+    # Mach-O and SIGKILLs the process, so every `bm`/`basic-memory` invocation
+    # died with exit 137 and no output at all -- not even a Python traceback,
+    # because the process is killed during `dlopen`.
+    #
+    # Re-sign the bundled Mach-O files here, after relocation has run.
+    # macOS-only: `codesign` does not exist on other platforms, and
+    # `Hardware::CPU.arm?` is true on ARM Linux too -- where the glob would
+    # find Linux `.so` files, `codesign` would be missing, and the `system`
+    # call below would abort `post_install` and fail the whole install.
+    return unless OS.mac?
+    return unless Hardware::CPU.arm?
+
+    # `File::FNM_DOTMATCH` is required. Ruby's `**` does not descend into
+    # dot-directories, and delocate vendors every dylib a macOS wheel bundles
+    # into a `.dylibs/` directory -- e.g. `PIL/.dylibs/libtiff.6.dylib`, one of
+    # the files reported crashing in #2. Without the flag, 18 of the 103 Mach-O
+    # files in a 0.23.2 install are skipped and `bm doctor` still dies.
+    Dir.glob(libexec/"**/*.{so,dylib}", File::FNM_DOTMATCH).each do |file|
+      next if quiet_system("codesign", "--verify", file)
+
+      system "codesign", "--force", "--sign", "-", file
+    end
+  end
+
   def caveats
     <<~EOS
       Basic Memory has been installed as a command-line tool.
