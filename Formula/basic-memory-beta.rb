@@ -43,8 +43,10 @@ class BasicMemoryBeta < Formula
     ENV["SETUPTOOLS_SCM_PRETEND_VERSION"] = bm_version
     
     # Install basic-memory as a uv tool from PyPI with exact version
-    # For pre-releases, we need to add --pre flag
-    system "uv", "tool", "install", "basic-memory==#{bm_version}", "--pre", "--no-cache"
+    # For pre-releases, we need to add --pre flag.
+    # `--python` pins the interpreter for the same reason as in
+    # basic-memory.rb (#6); keep the two formulas on the same version.
+    system "uv", "tool", "install", "basic-memory==#{bm_version}", "--pre", "--python", "3.13", "--no-cache"
     
     # Create symlinks to the executables
     bin.install_symlink Dir[libexec/"bin/*"]
