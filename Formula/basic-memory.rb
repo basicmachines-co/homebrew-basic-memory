@@ -21,8 +21,16 @@ class BasicMemory < Formula
     # Setting it would leak into dependency builds (e.g., lazy-object-proxy)
     # causing version metadata mismatches.
     
-    # Install basic-memory as a uv tool from PyPI with exact version
-    system "uv", "tool", "install", "basic-memory==#{version}", "--no-cache"
+    # Install basic-memory as a uv tool from PyPI with exact version.
+    #
+    # `--python` is required. Without it uv installs its newest managed
+    # CPython, which changes with every uv release: uv 0.13.1 picked 3.15, and
+    # onnxruntime (needed through fastembed) has no cp315 wheels, so the
+    # install failed (#6). 3.13 rather than 3.14 because onnxruntime's cp314
+    # wheels need macOS 14+ on Apple Silicon and do not exist for Intel Macs;
+    # 3.13 still resolves on both. Raise it deliberately once onnxruntime
+    # ships wheels for the newer Python on every Mac this tap supports.
+    system "uv", "tool", "install", "basic-memory==#{version}", "--python", "3.13", "--no-cache"
     
     # Create symlinks to the executables
     bin.install_symlink Dir[libexec/"bin/*"]
