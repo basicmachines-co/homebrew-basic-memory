@@ -13,6 +13,9 @@ class BasicMemoryBeta < Formula
   depends_on "rust" => :build
   depends_on "uv" => :build
 
+  # Same wheels as basic-memory.rb; see the comment on `preserve_rpath` there.
+  preserve_rpath
+
   def install
     # Get the version from BM_VERSION environment variable. Note this is
     # deliberately not named `version`: that would shadow Formula#version, which

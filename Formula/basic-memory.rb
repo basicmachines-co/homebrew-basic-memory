@@ -9,6 +9,13 @@ class BasicMemory < Formula
   depends_on "rust" => :build
   depends_on "uv" => :build
 
+  # Keep the `@rpath` install names of the extension modules uv installs from
+  # PyPI wheels. Python loads them by path, so the ID is never used, and some
+  # (jiter, watchfiles, py-rust-stemmers) leave too little header padding for
+  # the longer opt path: rewriting them fails and stops relocation of every
+  # file after it.
+  preserve_rpath
+
   def install
     # Install Python and basic-memory using uv
     ENV["UV_PYTHON_PREFERENCE"] = "only-managed"
