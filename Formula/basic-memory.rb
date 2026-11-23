@@ -6,8 +6,21 @@ class BasicMemory < Formula
   license "AGPL-3.0-or-later"
   head "https://github.com/basicmachines-co/basic-memory.git", branch: "main"
 
-  depends_on "rust" => :build
   depends_on "uv" => :build
+
+  # Every Rust extension in the dependency tree ships a cp313 or abi3 wheel for
+  # Apple Silicon and Linux, so cargo never runs there. Intel Macs still need
+  # it: cryptography publishes no x86_64 macOS wheel since 49.0.0, so uv builds
+  # it from the sdist. Any dependency can stop shipping a wheel, so re-check
+  # every platform before narrowing this further.
+  #
+  # Homebrew expects to stop running on Intel Macs in or after September 2027
+  # (https://docs.brew.sh/Support-Tiers); this block can be removed then.
+  on_macos do
+    on_intel do
+      depends_on "rust" => :build
+    end
+  end
 
   def install
     # Install Python and basic-memory using uv
